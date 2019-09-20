@@ -27,7 +27,7 @@ def quantize_img_LUT(img, ncolor):
     y = np.array([bins[i - 1] for i in np.digitize(np.arange(256), bins)]).astype(int)
     img_p = np.array(cv2.LUT(img_g, y), dtype=np.uint8)
     return img_p
-\
+
 def quantize_img_kmeans(img, ncolor):
     h, w, c = img.shape
     Z = np.float32(img.reshape((-1, 3)))
@@ -93,11 +93,9 @@ def main():
     img_orig = cv2.imread(image_file)
     if not quiet:
        show_image(img_orig, "original")
-    # img_ico = cv2.resize(img_orig, (width, height), cv2.INTER_NEAREST)
     img_ico = cv2.resize(img_orig, (width, height))
     img = quantize_img_kmeans(img_ico, ncolor)
     pixels = list(set(img.flatten()))
-    pixels = pixels[-1::-1]
     avgcolor = {}
     for ipix, pix in enumerate(pixels):
         avgcolor[ipix] = np.array(np.mean(img_ico[img == pix].reshape(-1, 3), axis=0), dtype=np.uint8)
@@ -112,7 +110,6 @@ def main():
     rightbottom = idx_mat[-1, -1]
     last_img = np.array(idx_mat)
         
-    # for newpx in itertools.permutations(range(npix)):
     for newpx in itertools.permutations(range(10), npix):
         if newpx[lefttop] == 0:
             continue
